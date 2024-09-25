@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Create Book</title>
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <style>
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div id="app" class="container">
+    <h1>Create Book</h1>
+    <el-form :model="book" :rules="rules" ref="bookForm" label-width="100px" @submit.native.prevent="createBook">
+      <el-form-item label="Title" prop="title">
+        <el-input v-model="book.title"></el-input>
+      </el-form-item>
+      <el-form-item label="Author" prop="author">
+        <el-input v-model="book.author"></el-input>
+      </el-form-item>
+      <el-form-item label="ISBN" prop="isbn">
+        <el-input v-model="book.isbn"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" native-type="submit">Create</el-button>
+      </el-form-item>
+    </el-form>
+  </div>
+
+  <script src="https://unpkg.com/vue@2"></script>
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      data() {
+        return {
+          book: {
+            title: '',
+            author: '',
+            isbn: ''
+          },
+          rules: {
+            title: [
+              { required: true, message: 'Please input title', trigger: 'blur' },
+              { min: 3, max: 255, message: 'Length should be 3 to 255', trigger: 'blur' }
+            ],
+            author: [
+              { required: true, message: 'Please input author', trigger: 'blur' },
+              { min: 3, max: 255, message: 'Length should be 3 to 255', trigger: 'blur' }
+            ],
+            isbn: [
+              { required: true, message: 'Please input ISBN', trigger: 'blur' },
+              { min: 10, max: 20, message: 'Length should be 10 to 20', trigger: 'blur' }
+            ]
+          }
+        };
+      },
+      methods: {
+        async createBook() {
+          this.$refs.bookForm.validate(async (valid) => {
+            if (valid) {
+              try {
+                const response = await axios.post('http://localhost:8080/api/books', this.book);
+                console.log('Book created:', response.data);
+                // 可以在这里添加成功创建后的处理逻辑，例如跳转到书籍列表页面
+                this.$message({
+                  message: 'Book created successfully',
+                  type: 'success'
+                });
+              } catch (error) {
+                if (error.response && error.response.data && error.response.data.message) {
+                  this.$message.error(error.response.data.message);
+                } else {
+                  this.$message.error('An error occurred while creating the book.');
+                }
+              }
+            } else {
+              console.log('error submit!!');
+              return false;
+            }
+          });
+        }
+      }
+    });
+  </script>
+</body>
+</html>
