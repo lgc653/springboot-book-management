@@ -6,15 +6,16 @@ import org.springframework.stereotype.Service;
 import com.example.bookmanagement.model.Account;
 import com.example.bookmanagement.repository.AccountRepository;
 
+import java.util.List;
+
 @Service
 public class AccountService {
-    @Autowired(required = false)
+    @Autowired
     private AccountRepository accountRepository;
 
     public Account auth(Account account) {
         Account dbAccount = accountRepository.findByName(account.getName());
         if (dbAccount != null) {
-            // 当然一般是加密后的密码比较，不是明码比较
             if (dbAccount.getPassword().equals(account.getPassword())) {
                 return dbAccount;
             } else {
@@ -23,5 +24,17 @@ public class AccountService {
         } else {
             return null;
         }
+    }
+
+    public Account createAccount(Account account) {
+        return accountRepository.save(account);
+    }
+
+    public Account getAccountById(int id) {
+        return accountRepository.findById(id).orElse(null);
+    }
+
+    public List<Account> getAllAccounts() {
+        return accountRepository.findAll();
     }
 }

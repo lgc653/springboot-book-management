@@ -2,6 +2,7 @@ package com.example.bookmanagement.controller;
 
 import com.example.bookmanagement.model.Book;
 import com.example.bookmanagement.dto.ErrorResponse;
+import com.example.bookmanagement.jwt.PassToken;
 import com.example.bookmanagement.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,6 +26,7 @@ public class BookController {
     private BookService bookService;
 
     @GetMapping
+    @PassToken
     public Page<Book> getAllBooks(
             @RequestParam(required = false) String title,
             @RequestParam(defaultValue = "0") int page,
@@ -47,11 +49,13 @@ public class BookController {
     }
 
     @PostMapping
+    @PassToken
     public Book createBook(@Valid @RequestBody Book book) {
         return bookService.save(book);
     }
 
     @PutMapping("/{id}")
+    @PassToken
     public ResponseEntity<Book> updateBook(@PathVariable Long id, @RequestBody Book bookDetails) {
         Optional<Book> book = bookService.findById(id);
         if (book.isPresent()) {
@@ -66,6 +70,7 @@ public class BookController {
     }
 
     @DeleteMapping("/{id}")
+    @PassToken
     public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
         bookService.deleteById(id);
         return ResponseEntity.noContent().build();

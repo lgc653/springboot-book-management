@@ -1,9 +1,6 @@
 package com.example.bookmanagement.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
@@ -12,11 +9,17 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @NotBlank(message = "Title cannot be blank")
     @Size(max = 255, message = "Title cannot exceed 255 characters")
     private String title;
+
     private String author;
     private String isbn;
+
+    @ManyToOne
+    @JoinColumn(name = "account_id", nullable = false)
+    private Account account; // Reference to the owning account
 
     // Getters and Setters
     public Long getId() {
@@ -49,5 +52,13 @@ public class Book {
 
     public void setIsbn(String isbn) {
         this.isbn = isbn;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
     }
 }
