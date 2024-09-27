@@ -1,35 +1,31 @@
 package com.example.bookmanagement.controller;
 
 import com.example.bookmanagement.model.Account;
+import com.example.bookmanagement.model.Book;
 import com.example.bookmanagement.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/accounts")
+@RequestMapping("/accounts")
 public class AccountController {
-
     @Autowired
     private AccountService accountService;
 
     @PostMapping
-    public ResponseEntity<Account> createAccount(@RequestBody Account account) {
-        Account createdAccount = accountService.createAccount(account);
-        return ResponseEntity.ok(createdAccount);
+    public Account createAccount(@RequestBody Account account) {
+        return accountService.createAccount(account);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Account> getAccountById(@PathVariable int id) {
-        Account account = accountService.getAccountById(id);
-        return ResponseEntity.ok(account);
+    public Account getAccountById(@PathVariable int id) {
+        return accountService.getAccountById(id);
     }
 
-    @GetMapping
-    public ResponseEntity<List<Account>> getAllAccounts() {
-        List<Account> accounts = accountService.getAllAccounts();
-        return ResponseEntity.ok(accounts);
+    @GetMapping("/{id}/books")
+    public List<Book> getBooksByAccountId(@PathVariable Integer id) {
+        return accountService.getBooksByAccountId(id);
     }
 }

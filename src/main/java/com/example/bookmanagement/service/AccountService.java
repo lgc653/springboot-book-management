@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.bookmanagement.model.Account;
+import com.example.bookmanagement.model.Book;
 import com.example.bookmanagement.repository.AccountRepository;
+import com.example.bookmanagement.repository.BookRepository;
 
 import java.util.List;
 
@@ -12,6 +14,9 @@ import java.util.List;
 public class AccountService {
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    private BookRepository bookRepository;
 
     public Account auth(Account account) {
         Account dbAccount = accountRepository.findByName(account.getName());
@@ -36,5 +41,9 @@ public class AccountService {
 
     public List<Account> getAllAccounts() {
         return accountRepository.findAll();
+    }
+
+    public List<Book> getBooksByAccountId(Integer accountId) {
+        return bookRepository.findByAccount_Id(accountId);
     }
 }
